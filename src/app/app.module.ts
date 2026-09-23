@@ -4,15 +4,12 @@ import { BrowserModule, provideClientHydration } from '@angular/platform-browser
 import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AppComponent,
   ],
   providers: [
     provideClientHydration()
   ],
-  bootstrap: [AppComponent]
 })
 export class AppModule { }
