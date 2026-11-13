@@ -1,0 +1,11 @@
+<div class="form-heading"><span class="eyebrow">BIENVENIDO</span><h2>Inicia sesión</h2><p>Usa tu correo de empresa para continuar.</p></div>
+            <form (ngSubmit)="app.login()">
+              <label>Correo electrónico<input type="email" name="loginEmail" [(ngModel)]="app.email" placeholder="nombre@empresa.com" autocomplete="username" required></label>
+              <label>Contraseña<input type="password" name="loginPassword" [(ngModel)]="app.password" placeholder="Escribe tu contraseña" autocomplete="current-password" required></label>
+              <div class="form-row between"><label class="check-line"><input type="checkbox" name="keep" [(ngModel)]="app.keepSession"> Mantener sesión en este equipo</label><button class="text-button" type="button" (click)="app.openAuth('recover')">¿Olvidaste tu contraseña?</button></div>
+              <button class="primary-button full" type="submit">Entrar <span>→</span></button>
+            </form>
+            <div class="or-divider"><span>o</span></div>
+            <button class="secondary-button full" type="button" (click)="app.showToast('El acceso SSO requiere el plan Empresarial y la configuración de tu proveedor de identidad.')"><span class="sso-icon">↗</span> Continuar con cuenta corporativa (SSO)</button>
+            <p class="auth-hint">¿No tienes cuenta? <button class="text-button" type="button" (click)="app.openAuth('register')">Solicitar alta de empresa</button></p>
+            <div class="auth-help-links">

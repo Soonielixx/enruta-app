@@ -1,0 +1,19 @@
+<div class="page-heading"><div><span class="eyebrow">OPERACIÓN</span><h1>Torre de control</h1><p>Resumen de la operación de reparto{{ app.centerName ? ' · ' + app.centerName : '' }}.</p></div><div class="heading-actions"><span class="live-pill"><i></i> En vivo</span><button class="secondary-button" type="button" (click)="app.navigate('context')">Seleccionar centro</button></div></div>
+<div class="metric-grid">
+  <article class="metric-card"><span>Rutas publicadas</span><strong>{{ app.routeStatusCounts.published }}</strong><small>{{ app.routes.length }} rutas en total</small><span class="metric-icon blue">↗</span></article>
+  <article class="metric-card"><span>Paradas planeadas</span><strong>{{ app.totalStops }}</strong><small>{{ app.clients.length }} clientes registrados</small><span class="metric-icon green">◷</span></article>
+  <article class="metric-card"><span>Aprobaciones</span><strong>{{ app.approvals.length }}</strong><small>{{ app.approvals.length ? 'Requieren tu autorización' : 'Sin pendientes' }}</small><span class="metric-icon violet">✓</span></article>
+  <article class="metric-card"><span>Clientes sin ubicar</span><strong>{{ app.clientsWithoutLocation }}</strong><small>{{ app.products.length }} productos en catálogo</small><span class="metric-icon orange">⌖</span></article>
+</div>
+<div class="dashboard-grid">
+  <section class="panel map-panel"><div class="panel-heading"><div><h2>Seguimiento de rutas</h2><p>Recorrido planeado de cada ruta activa.</p></div><button class="text-button" type="button" (click)="app.navigate('routes')">Ver rutas →</button></div>
+    <div class="map-holder"><app-route-map [markers]="app.overviewMarkers" [lines]="app.overviewLines" [height]="340" /></div>
+    @if (app.routes.length) { <div class="map-legend">@for (route of app.routes; track route.id) { <button type="button" (click)="app.openRoute(route)"><i [style.background]="route.color"></i>{{ route.name }}</button> }</div> }
+    @else { <p class="hint-line map-hint">Aún no hay rutas. <button class="text-button" type="button" (click)="app.openCreate('ruta')">Crear primera ruta</button></p> }
+  </section>
+  <section class="panel"><div class="panel-heading"><div><h2>Alertas</h2><p>Eventos importantes de tu operación.</p></div><button class="icon-button" type="button" aria-label="Ver notificaciones" (click)="app.navigate('notifications')">↗</button></div>
+    @if (app.notifications.length) { <div class="compact-list">@for (item of app.notifications.slice(0, 6); track item.id) { <div class="compact-item"><span class="alert-dot"></span><span><strong>{{ item.name }}</strong><small>{{ item.detail }}</small></span></div> }</div> }
+    @else { <div class="empty-state small-empty"><span class="empty-icon">♧</span><strong>Todo está tranquilo</strong><p>Las alertas aparecerán aquí cuando haya actividad.</p></div> }
+  </section>
+</div>
+<section class="panel onboarding-panel"><div><span class="eyebrow">PRIMEROS PASOS</span><h2>Configura tu espacio de trabajo</h2><p>Completa estos pasos para preparar EnRuta para tu equipo.</p><div class="onboarding-steps"><button type="button" (click)="app.navigate('configuration')"><span>01</span><strong>Configura módulos</strong><small>{{ app.enabledModuleCount }} módulos activos</small><b>→</b></button><button type="button" (click)="app.startImport('clientes')"><span>02</span><strong>Carga tus datos</strong><small>{{ app.clients.length }} clientes · {{ app.products.length }} productos</small><b>→</b></button><button type="button" (click)="app.navigate('routes')"><span>03</span><strong>Crea tu primera ruta</strong><small>{{ app.routes.length }} rutas creadas</small><b>→</b></button></div></div><div class="onboarding-graphic">E</div></section>

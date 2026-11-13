@@ -1,0 +1,3 @@
+<div class="success-mark">✓</div><div class="form-heading centered"><span class="eyebrow">SOLICITUD RECIBIDA</span><h2>Solicitud enviada</h2><p>Tu empresa y tu cuenta de administrador ya están creadas. Inicia sesión con tu correo y contraseña.</p></div>
+            <div class="summary-card"><span>Empresa</span><strong>{{ app.registeredCompany || 'Por confirmar' }}</strong><span>Plan solicitado</span><strong>{{ app.selectedPlan || 'Por definir' }}</strong></div>
+            <button class="primary-button full" type="button" (click)="app.openAuth('login')">Iniciar sesión</button>

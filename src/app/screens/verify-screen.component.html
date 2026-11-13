@@ -1,0 +1,8 @@
+<button class="back-link" type="button" (click)="app.openAuth('login')">← Volver al inicio de sesión</button>
+            <div class="form-heading"><span class="step-icon">✳</span><h2>Verificación en dos pasos</h2><p>Ingresa el código de 6 dígitos de tu app de autenticación.</p></div>
+            <form (ngSubmit)="app.sendVerification()">
+              <label>Código de verificación<input class="code-input" type="text" name="verificationCode" [(ngModel)]="app.verificationCode" placeholder="000000" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required></label>
+              <label class="check-line spaced"><input type="checkbox"> Confiar en este equipo por 30 días</label>
+              <button class="primary-button full" type="submit">Verificar <span>→</span></button>
+            </form>
+            <button class="text-button recovery-link" type="button" (click)="app.openAuth('login')">Cancelar y volver</button>

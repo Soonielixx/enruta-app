@@ -1,0 +1,10 @@
+@if (failure.failed) {
+  <section class="screen-failure" role="alert">
+    <span class="eyebrow">PANTALLA NO DISPONIBLE</span>
+    <h2>No se pudo cargar esta pantalla</h2>
+    <p>El resto de EnRuta sigue disponible. Puedes volver a intentarlo.</p>
+    <button class="primary-button" type="button" (click)="retry()">Reintentar</button>
+  </section>
+} @else {
+  <ng-container *ngComponentOutlet="screen; inputs: componentInputs" />
+}

@@ -1,0 +1,170 @@
+@if (!state.authenticated) {
+  <div class="auth-shell">
+    <aside class="auth-brand">
+      <a class="brand-lockup" href="#" (click)="$event.preventDefault(); state.openAuth('login')"><span class="brand-mark">E</span><span>EnRuta</span></a>
+      <div class="auth-pitch">
+        <span class="eyebrow">PANEL DE ADMINISTRACIÓN</span>
+        <h1>
+          @switch (state.authView) {
+            @case ('verify') { Una capa más de seguridad }
+            @case ('recover') { ¿Olvidaste tu contraseña? }
+            @case ('reset') { Crea una contraseña nueva }
+            @case ('register') { Empieza con EnRuta }
+            @case ('plan') { Elige cómo quieres operar }
+            @case ('submitted') { Solicitud enviada }
+            @case ('permission') { Acceso protegido }
+            @case ('expired') { Tu sesión terminó }
+            @default { Control total de tu operación de reparto }
+          }
+        </h1>
+        <p>Administra rutas, parámetros, usuarios y aprobaciones desde un solo panel.</p>
+        <div class="feature-list">
+          <div><span class="feature-icon">⌖</span> Seguimiento de ruta en tiempo real</div>
+          <div><span class="feature-icon">✓</span> Evidencia de entrega y cobro</div>
+          <div><span class="feature-icon">⇄</span> Liquidación conciliada con tu ERP</div>
+        </div>
+      </div>
+      <div class="auth-footer">© 2026 EnRuta <span>·</span> Aviso de privacidad <span>·</span> Soporte</div>
+    </aside>
+
+    <main class="auth-main">
+      <section class="auth-card">
+        @switch (state.authView) {
+          @case ('login') {<app-screen-boundary [screen]="screens.login" [app]="state" />}
+          @case ('verify') {<app-screen-boundary [screen]="screens.verify" [app]="state" />}
+          @case ('recover') {<app-screen-boundary [screen]="screens.recover" [app]="state" />}
+          @case ('reset') {<app-screen-boundary [screen]="screens.reset" [app]="state" />}
+          @case ('register') {<app-screen-boundary [screen]="screens.register" [app]="state" />}
+          @case ('plan') {<app-screen-boundary [screen]="screens.plan" [app]="state" />}
+          @case ('submitted') {<app-screen-boundary [screen]="screens.submitted" [app]="state" />}
+          @case ('permission') {<app-screen-boundary [screen]="screens.permission" [app]="state" />}
+          @case ('expired') {<app-screen-boundary [screen]="screens.expired" [app]="state" />}
+        }
+      </section>
+      <div class="auth-mobile-footer">© 2026 EnRuta · Aviso de privacidad · Soporte</div>
+    </main>
+  </div>
+} @else {
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand-lockup sidebar-brand" href="#" (click)="$event.preventDefault(); state.navigate('dashboard')"><span class="brand-mark">E</span><span>EnRuta</span></a>
+      <div class="company-switch"><span class="company-avatar">E</span><span><strong>{{ state.companyName || 'Tu empresa' }}</strong><small>{{ state.centerName || 'Sin centro seleccionado' }}</small></span><button type="button" aria-label="Cambiar empresa o centro" (click)="state.navigate('context')">⌄</button></div>
+      <nav class="side-nav">
+        @for (group of state.navigation; track group.label) {
+          <div class="nav-group"><div class="nav-label">{{ group.label }}</div>
+            @for (item of group.items; track item.view) {
+              @if (state.canAccess(item.view)) {<button type="button" class="nav-item" [class.active]="state.view === item.view" (click)="state.navigate(item.view)"><span class="nav-icon">{{ item.icon }}</span>{{ item.label }}@if (item.view === 'approvals' && state.approvals.length) { <span class="nav-count">{{ state.approvals.length }}</span> }</button>}
+            }
+          </div>
+        }
+      </nav>
+      <div class="sidebar-bottom">
+        <button type="button" class="nav-item" [class.active]="state.view === 'notifications'" (click)="state.navigate('notifications')"><span class="nav-icon">♧</span>Notificaciones@if (state.notifications.length) { <span class="nav-count">{{ state.notifications.length }}</span> }</button>
+        <button type="button" class="nav-item" [class.active]="state.view === 'profile'" (click)="state.navigate('profile')"><span class="nav-icon">◉</span>Mi perfil</button>
+        <div class="user-mini"><span class="user-avatar">@if (state.account?.photo) { <img [src]="state.account!.photo" alt=""> } @else { {{ state.initials }} }</span><span><strong>{{ state.displayName }}</strong><small>{{ state.roleName }}</small></span><button type="button" aria-label="Cerrar sesión" (click)="state.signOut()">↪</button></div>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">E</span> EnRuta</div>
+        <div class="breadcrumbs">Panel administrador <span>/</span> <strong>{{ state.title }}</strong></div>
+        <select class="mobile-nav-select" aria-label="Navegación" [(ngModel)]="state.view" (ngModelChange)="state.navigate($event)">
+          @for (group of state.navigation; track group.label) { <optgroup [label]="group.label">@for (item of group.items; track item.view) { <option [value]="item.view">{{ item.label }}</option> }</optgroup> }
+          <option value="planner">Planeador de rutas</option><option value="publish">Publicar configuración</option><option value="profile">Mi perfil</option><option value="notifications">Notificaciones</option><option value="context">Cambiar de contexto</option>
+        </select>
+        <div class="top-actions"><button class="icon-button notification-button" type="button" aria-label="Notificaciones" (click)="state.navigate('notifications')">♧@if (state.notifications.length) { <i></i> }</button><button type="button" class="top-user" (click)="state.navigate('profile')" aria-label="Mi perfil">@if (state.account?.photo) { <img [src]="state.account!.photo" alt=""> } @else { {{ state.initials }} }</button></div>
+      </header>
+
+      <div class="page-content">
+        @switch (state.view) {
+          @case ('dashboard') {<app-screen-boundary [screen]="screens.dashboard" [app]="state" />}
+          @case ('routes') {<app-screen-boundary [screen]="screens.routes" [app]="state" />}
+          @case ('planner') {<app-screen-boundary [screen]="screens.planner" [app]="state" />}
+          @case ('approvals') {<app-screen-boundary [screen]="screens.approvals" [app]="state" />}
+          @case ('reports') {<app-screen-boundary [screen]="screens.reports" [app]="state" />}
+          @case ('settlements') {<app-screen-boundary [screen]="screens.settlements" [app]="state" />}
+          @case ('audit') {<app-screen-boundary [screen]="screens.audit" [app]="state" />}
+          @case ('configuration') {<app-screen-boundary [screen]="screens.configuration" [app]="state" />}
+          @case ('parameters') {<app-screen-boundary [screen]="screens.parameters" [app]="state" />}
+          @case ('forms') {<app-screen-boundary [screen]="screens.forms" [app]="state" />}
+          @case ('publish') {<app-screen-boundary [screen]="screens.publish" [app]="state" />}
+          @case ('brand') {<app-screen-boundary [screen]="screens.brand" [app]="state" />}
+          @case ('integrations') {<app-screen-boundary [screen]="screens.integrations" [app]="state" />}
+          @case ('import') {<app-screen-boundary [screen]="screens.import" [app]="state" />}
+          @case ('products') {<app-screen-boundary [screen]="screens.products" [app]="state" />}
+          @case ('clients') {<app-screen-boundary [screen]="screens.clients" [app]="state" />}
+          @case ('prices') {<app-screen-boundary [screen]="screens.prices" [app]="state" />}
+          @case ('users') {<app-screen-boundary [screen]="screens.users" [app]="state" />}
+          @case ('devices') {<app-screen-boundary [screen]="screens.devices" [app]="state" />}
+          @case ('profile') {<app-screen-boundary [screen]="screens.profile" [app]="state" />}
+          @case ('notifications') {<app-screen-boundary [screen]="screens.notifications" [app]="state" />}
+          @case ('context') {<app-screen-boundary [screen]="screens.context" [app]="state" />}
+        }
+      </div>
+    </main>
+  </div>
+}
+
+@if (state.modalKind) {
+  <div class="modal-backdrop" (click)="state.closeModal()">
+    <section class="modal-card" role="dialog" aria-modal="true" [attr.aria-label]="state.kindLabel(state.modalKind)" (click)="$event.stopPropagation()">
+      <button class="modal-close" type="button" aria-label="Cerrar" (click)="state.closeModal()">×</button><span class="eyebrow">{{ state.editingId !== null ? 'EDITAR REGISTRO' : 'NUEVO REGISTRO' }}</span><h2>{{ state.editingId !== null ? 'Editar' : 'Crear' }} {{ state.kindLabel(state.modalKind).toLowerCase() }}</h2><p>Completa la información. Podrás modificarla cuando quieras.</p>
+      <form (ngSubmit)="state.saveRecord()">
+        @if (state.modalKind !== 'liquidacion') { <label>{{ state.modalKind === 'usuario' ? 'Nombre completo' : 'Nombre' }}<input name="draftName" [(ngModel)]="state.draftName" placeholder="Escribe un nombre" required></label> }
+        @switch (state.modalKind) {
+          @case ('ruta') {
+            <div class="form-two"><label>Operador<select name="draftOperator" [(ngModel)]="state.draftOperator"><option value="">Sin asignar</option>@for (u of state.users; track u.id) { <option [value]="u.id">{{ u.name }}</option> }</select></label><label>Día de operación<select name="draftDay" [(ngModel)]="state.draftDay">@for (d of state.days; track d) { <option>{{ d }}</option> }</select></label></div>
+            <div class="form-two"><label>Estado<select name="draftStatus" [(ngModel)]="state.draftStatus"><option>Borrador</option><option>Publicada</option><option>Inactiva</option></select></label><label>Color en el mapa<input name="draftColor" type="color" [(ngModel)]="state.draftColor"></label></div>
+          }
+          @case ('cliente') {
+            <label>Dirección<input name="draftDetail" [(ngModel)]="state.draftDetail" placeholder="Calle, número, colonia, ciudad"></label>
+            <label>Teléfono<input name="draftPhone" type="tel" [(ngModel)]="state.draftPhone" placeholder="Opcional"></label>
+            <div class="form-two"><label>Latitud<input name="draftLat" [(ngModel)]="state.draftLat" placeholder="19.4326"></label><label>Longitud<input name="draftLng" [(ngModel)]="state.draftLng" placeholder="-99.1332"></label></div>
+            <button class="secondary-button" type="button" (click)="state.geocodeDraft()">⌖ Buscar coordenadas con Mapbox</button>
+            <label>Estado<select name="draftStatus" [(ngModel)]="state.draftStatus"><option>Activo</option><option>Inactivo</option></select></label>
+          }
+          @case ('producto') {
+            <label>Descripción o unidad<input name="draftDetail" [(ngModel)]="state.draftDetail" placeholder="Opcional"></label>
+            <div class="form-two"><label>Clave<input name="draftCode" [(ngModel)]="state.draftCode" placeholder="Opcional"></label><label>Categoría<input name="draftCategory" [(ngModel)]="state.draftCategory" placeholder="Opcional"></label></div>
+            <div class="form-two"><label>Precio base (MXN)<input name="draftPrice" type="number" min="0" step="0.01" [(ngModel)]="state.draftPrice" placeholder="0.00"></label><label>Estado<select name="draftStatus" [(ngModel)]="state.draftStatus"><option>Activo</option><option>Inactivo</option></select></label></div>
+          }
+          @case ('usuario') {
+            <label>Correo electrónico<input name="draftEmail" type="email" [(ngModel)]="state.draftEmail" placeholder="nombre@empresa.com" required></label>
+            <div class="form-two"><label>Rol<select name="draftRole" [(ngModel)]="state.draftRole">@for (r of state.roles; track r) { <option>{{ r }}</option> }</select></label><label>Estado<select name="draftStatus" [(ngModel)]="state.draftStatus"><option>Activo</option><option>Inactivo</option></select></label></div>
+            @if (state.editingId === null) { <label>Contraseña temporal<input name="draftPassword" type="password" [(ngModel)]="state.draftPassword" placeholder="12+ caracteres, mayúscula y número" autocomplete="new-password" required></label> }
+          }
+          @case ('liquidacion') {
+            <div class="form-two"><label>Ruta<select name="draftOperator" [(ngModel)]="state.draftOperator" required><option value="">Selecciona</option>@for (r of state.routes; track r.id) { <option [value]="r.id">{{ r.name }}</option> }</select></label><label>Fecha<input name="draftDate" type="date" [(ngModel)]="state.draftDate"></label></div>
+            <div class="form-two"><label>Efectivo cobrado (MXN)<input name="draftPrice" type="number" min="0" step="0.01" [(ngModel)]="state.draftPrice" required></label><label>Efectivo depositado (MXN)<input name="draftDeposit" type="number" min="0" step="0.01" [(ngModel)]="state.draftDeposit" required></label></div>
+          }
+          @default {
+            <label>{{ state.modalKind === 'dispositivo' ? 'Modelo y versión de la app' : 'Detalle opcional' }}<input name="draftDetail" [(ngModel)]="state.draftDetail" placeholder="Opcional"></label>
+            <label>Estado<select name="draftStatus" [(ngModel)]="state.draftStatus"><option>Activo</option><option>Inactivo</option></select></label>
+          }
+        }
+        <div class="form-row end"><button class="secondary-button" type="button" (click)="state.closeModal()">Cancelar</button><button class="primary-button" type="submit">Guardar</button></div>
+      </form>
+    </section>
+  </div>
+}
+
+@if (state.showPasswordDialog) {
+  <div class="modal-backdrop" (click)="state.closeModal()"><section class="modal-card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()"><button class="modal-close" type="button" aria-label="Cerrar" (click)="state.closeModal()">×</button><span class="eyebrow">SEGURIDAD</span><h2>Cambiar contraseña</h2><p>Escribe tu contraseña actual y elige una nueva.</p>
+    <form (ngSubmit)="state.changePassword()"><label>Contraseña actual<input name="cp1" type="password" [(ngModel)]="state.passwordForm.current" autocomplete="current-password" required></label><label>Contraseña nueva<input name="cp2" type="password" [(ngModel)]="state.passwordForm.next" placeholder="12+ caracteres, mayúscula y número" autocomplete="new-password" required></label><label>Confirmar contraseña nueva<input name="cp3" type="password" [(ngModel)]="state.passwordForm.confirm" autocomplete="new-password" required></label><div class="form-row end"><button class="secondary-button" type="button" (click)="state.closeModal()">Cancelar</button><button class="primary-button" type="submit">Actualizar contraseña</button></div></form></section></div>
+}
+
+@if (state.showTotpDialog) {
+  <div class="modal-backdrop" (click)="state.closeModal()"><section class="modal-card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()"><button class="modal-close" type="button" aria-label="Cerrar" (click)="state.closeModal()">×</button><span class="eyebrow">SEGURIDAD</span><h2>Verificación en dos pasos</h2>
+    @if (state.account?.totpSecret) {
+      <p>Está activada. Para desactivarla escribe un código vigente de tu app de autenticación.</p>
+      <form (ngSubmit)="state.disableTotp()"><label>Código de 6 dígitos<input class="code-input" name="tc1" [(ngModel)]="state.totpCode" maxlength="6" inputmode="numeric" placeholder="000000" required></label><div class="form-row end"><button class="secondary-button" type="button" (click)="state.closeModal()">Cancelar</button><button class="danger-button" type="submit">Desactivar</button></div></form>
+    } @else {
+      <p>Agrega esta clave en Google Authenticator, Authy o 1Password (entrada manual, tipo basado en tiempo) y escribe el código que genera.</p>
+      <div class="secret-box">{{ state.totpSecretDraft }}</div>
+      <form (ngSubmit)="state.confirmTotp()"><label>Código de 6 dígitos<input class="code-input" name="tc2" [(ngModel)]="state.totpCode" maxlength="6" inputmode="numeric" placeholder="000000" required></label><div class="form-row end"><button class="secondary-button" type="button" (click)="state.closeModal()">Cancelar</button><button class="primary-button" type="submit">Activar</button></div></form>
+    }
+  </section></div>
+}
+
+@if (state.toast) { <div class="toast-message" [class.toast-error]="state.toastKind === 'error'" [attr.role]="state.toastKind === 'error' ? 'alert' : 'status'"><span class="toast-icon">@if (state.toastKind === 'error') { <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg> } @else { ✓ }</span><p>{{ state.toast }}</p><button type="button" aria-label="Cerrar aviso" (click)="state.toast = ''">×</button></div> }

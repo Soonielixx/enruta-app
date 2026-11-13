@@ -1,0 +1,11 @@
+<button class="back-link" type="button" (click)="app.openAuth('login')">← Volver al inicio de sesión</button>
+            <div class="form-heading"><h2>Nueva contraseña</h2><p>Elige una contraseña que no hayas usado antes.</p></div>
+            <form (ngSubmit)="app.saveNewPassword()">
+              <label>Correo<input type="email" name="resetEmail" [(ngModel)]="app.email" required></label>
+              <label>Código de recuperación<input name="resetCode" [(ngModel)]="app.resetCode" inputmode="numeric" maxlength="6" placeholder="000000" required></label>
+              <label>Contraseña nueva<input type="password" name="newPassword" [(ngModel)]="app.newPassword" placeholder="Mínimo 12 caracteres" minlength="12" required></label>
+              <label>Confirmar contraseña<input type="password" name="confirmPassword" [(ngModel)]="app.confirmPassword" placeholder="Repite tu contraseña" required></label>
+              <div class="password-rules"><span [class.rule-ok]="app.passwordLengthValid">✓</span> Mínimo 12 caracteres</div>
+              <div class="password-rules"><span [class.rule-ok]="app.passwordComplexityValid">✓</span> Una mayúscula y un número</div>
+              <button class="primary-button full" type="submit">Guardar contraseña</button>
+            </form>

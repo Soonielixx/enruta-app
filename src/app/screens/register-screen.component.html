@@ -1,0 +1,16 @@
+<div class="form-heading"><span class="eyebrow">ALTA DE EMPRESA · PASO 1 DE 2</span><h2>Solicitar alta de empresa</h2><p>Completa los datos de tu empresa. Nuestro equipo revisará la solicitud.</p></div>
+            <form (ngSubmit)="app.continueRegistration()">
+              <div class="form-grid">
+                <label class="wide">Razón social<input name="companyName" [(ngModel)]="app.reg.company" placeholder="Nombre legal de la empresa" required></label>
+                <label>RFC<input name="rfc" [(ngModel)]="app.reg.rfc" placeholder="RFC de la empresa" required></label>
+                <label>Giro<input name="industry" [(ngModel)]="app.reg.industry" placeholder="Selecciona un giro" required></label>
+                <label>País<select name="country" [(ngModel)]="app.reg.country" required><option value="">Selecciona un país</option><option>México</option></select></label>
+                <label>Zona horaria<select name="timezone" [(ngModel)]="app.reg.timezone" required><option value="">Selecciona una zona</option><option>America/Mexico_City</option></select></label>
+                <label>Nombre del administrador<input name="adminName" [(ngModel)]="app.reg.adminName" placeholder="Nombre completo" required></label>
+                <label>Correo del administrador<input name="adminEmail" [(ngModel)]="app.reg.adminEmail" type="email" placeholder="nombre@empresa.com" required></label>
+                <label>Teléfono<input name="phone" [(ngModel)]="app.reg.phone" type="tel" placeholder="Número de contacto" required></label>
+              <label>Contraseña<input name="regPassword" type="password" [(ngModel)]="app.reg.password" placeholder="Mínimo 12 caracteres, mayúscula y número" autocomplete="new-password" required></label><label>Confirmar contraseña<input name="regConfirm" type="password" [(ngModel)]="app.reg.confirm" autocomplete="new-password" required></label>
+              </div>
+              <label class="check-line terms"><input type="checkbox" [(ngModel)]="app.acceptedTerms" name="acceptedTerms" required> Acepto los términos del servicio y el aviso de privacidad.</label>
+              <div class="form-row between"><button class="secondary-button" type="button" (click)="app.openAuth('login')">Cancelar</button><button class="primary-button" type="submit" [disabled]="!app.acceptedTerms">Continuar <span>→</span></button></div>
+            </form>

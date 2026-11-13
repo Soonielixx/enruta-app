@@ -1,0 +1,7 @@
+<button class="back-link" type="button" (click)="app.openAuth('login')">← Volver al inicio de sesión</button>
+            <div class="form-heading"><span class="step-icon">✉</span><h2>Recuperar contraseña</h2><p>Escribe el correo con el que accedes al panel.</p></div>
+            <form (ngSubmit)="app.sendRecovery()">
+              <label>Correo electrónico<input type="email" name="recoveryEmail" [(ngModel)]="app.email" placeholder="nombre@empresa.com" required></label>
+              <button class="primary-button full" type="submit">Enviar enlace <span>→</span></button>
+            </form>
+            <p class="notice-box">Si el correo existe, recibirás un enlace seguro válido por 30 minutos. Revisa también tu carpeta de spam.</p>
